@@ -61,4 +61,27 @@ public class RepositoryFile implements Repository {
         saveUser(users);             
     }
 
+    public void deleteUser(User user){                    // удаление
+        List<String> lines = fileOperation.readAllLines();
+        List<User> users = new ArrayList<>();
+        for (String line : lines) {
+            users.add(mapper.map(line));
+        }
+
+        int findIndex = -1;
+
+        for (int i = 0; i < users.size(); i++) {
+            User currentUser = users.get(i);
+            if (user.getId().equals(currentUser.getId())){
+                findIndex = i;
+                break;
+            }
+        }
+
+        if (findIndex > -1) {
+            lines.remove(findIndex);
+        }
+        fileOperation.saveAllLines(lines);
+    }
+
 }

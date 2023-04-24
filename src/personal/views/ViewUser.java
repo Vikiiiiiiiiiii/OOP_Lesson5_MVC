@@ -37,6 +37,9 @@ public class ViewUser {
                     case UPDATE:
                         updateUser();
                         break;
+                    case DELETE:
+                        delete();
+                        break;
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -80,5 +83,10 @@ public class ViewUser {
         Scanner in = new Scanner(System.in);
         System.out.print(message);
         return in.nextLine();
+    }
+    
+    private void delete() throws Exception{
+        String userid = prompt("Идентификатор пользователя: ");
+        userController.deleteUser(userid);
     }
 }
