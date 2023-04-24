@@ -28,7 +28,7 @@ public class RepositoryFile implements Repository {
         int max = 0;
         for (User item : users) {
             int id = Integer.parseInt(item.getId());
-            if (max < id){
+            if (max < id) {
                 max = id;
             }
         }
@@ -36,11 +36,29 @@ public class RepositoryFile implements Repository {
         String id = String.format("%d", newId);
         user.setId(id);
         users.add(user);
+        saveUser(users);
+        return id;
+    }
+
+    private void saveUser(List<User> users) {             // сохранение
         List<String> lines = new ArrayList<>();
-        for (User item: users) {
+
+        for (User item : users) {
             lines.add(mapper.map(item));
         }
         fileOperation.saveAllLines(lines);
-        return id;
     }
+
+    public void updateUser(User user) {                   // изменения
+        List<User> users = getAllUsers();
+        for (User item : users) {
+            if (item.getId().equals(user.getId())) {
+                item.setFirstName(user.getFirstName());
+                item.setLastName(user.getLastName());
+                item.setPhone(user.getPhone());
+            }
+        }
+        saveUser(users);             
+    }
+
 }

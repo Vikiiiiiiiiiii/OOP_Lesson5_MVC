@@ -3,6 +3,8 @@ package personal.views;
 import personal.controllers.UserController;
 import personal.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ViewUser {
@@ -17,26 +19,60 @@ public class ViewUser {
         Commands com = Commands.NONE;
 
         while (true) {
-            String command = prompt("Введите команду: ");
-            com = Commands.valueOf(command);
-            if (com == Commands.EXIT) return;
-            switch (com) {
-                case CREATE:
-                    String firstName = prompt("Имя: ");
-                    String lastName = prompt("Фамилия: ");
-                    String phone = prompt("Номер телефона: ");
-                    userController.saveUser(new User(firstName, lastName, phone));
-                    break;
-                case READ:
-                    String id = prompt("Идентификатор пользователя: ");
-                    try {
-                        User user = userController.readUser(id);
-                        System.out.println(user);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
+            try {
+                String command = prompt("Введите команду: ");
+                com = Commands.valueOf(command.toUpperCase());        // ввод команд и большими и маленькими буквами
+
+                if (com == Commands.EXIT) return;
+                switch (com) {
+                    case CREATE:
+                        create();
+                        break;
+                    case READ:
+                        read();
+                        break;
+                    case LIST:
+                        list();
+                        break;
+                    case UPDATE:
+                        updateUser();
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private void updateUser() throws Exception {
+        String id = prompt("Идентификатор пользователя: ");
+        User user = userController.readUser(id);
+        System.out.println(user);
+        System.out.println();
+        String firstName = prompt("Имя: ");
+        String lastName = prompt("Фамилия: ");
+        String phone = prompt("Номер телефона: ");
+        userController.updateUser(new User(id, firstName, lastName, phone));
+    }
+
+    private void create() {
+        String firstName = prompt("Имя: ");
+        String lastName = prompt("Фамилия: ");
+        String phone = prompt("Номер телефона: ");
+        userController.saveUser(new User(firstName, lastName, phone));
+    }
+
+    private void read() throws Exception {
+        String id = prompt("Идентификатор пользователя: ");
+        User user = userController.readUser(id);
+        System.out.println(user);
+    }
+
+    private void list() {
+        List<User> allUsers = userController.allUsers();
+        for (User user : allUsers) {
+            System.out.println(user);
+            System.out.println();
         }
     }
 
